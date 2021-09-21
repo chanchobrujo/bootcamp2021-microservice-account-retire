@@ -1,9 +1,9 @@
 package com.everisbootcamp.accountretire.Web;
 
+import com.everisbootcamp.accountretire.Constant.Constants;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.everisbootcamp.accountretire.Constant.Constants;
+public class Consumer {
 
-public class Consumer { 
-	 public static final WebClient webclientAccount = WebClient.create(Constants.Path.ACCOUNT_PATH);
+    public static final WebClient webclientAccount = WebClient.create(Constants.Path.ACCOUNT_PATH);
 }

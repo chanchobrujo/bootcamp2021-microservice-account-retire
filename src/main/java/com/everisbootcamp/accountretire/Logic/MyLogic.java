@@ -1,5 +1,3 @@
 package com.everisbootcamp.accountretire.Logic;
 
-public class MyLogic {
-
-}
+public class MyLogic {}

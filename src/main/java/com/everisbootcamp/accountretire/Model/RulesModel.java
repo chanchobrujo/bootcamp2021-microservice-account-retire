@@ -11,9 +11,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class RulesModel { 
+public class RulesModel {
+
     private String customerType;
-    private boolean commissionMaintenance; 
+    private boolean commissionMaintenance;
     private boolean maximumLimitMonthlyMovements;
     private Integer maximumLimitMonthlyMovementsQuantity;
 }
