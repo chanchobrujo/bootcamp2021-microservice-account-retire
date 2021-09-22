@@ -9,6 +9,7 @@ import com.everisbootcamp.accountretire.Model.RetireModel;
 import com.everisbootcamp.accountretire.Web.Consumer;
 import java.util.Map;
 import java.util.stream.Collectors;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @Service
 public class RetireService {
 
@@ -42,12 +44,24 @@ public class RetireService {
         return Mono.just(ResponseEntity.internalServerError().body(response.getResponse()));
     }
 
-    public Mono<ResponseModel> save(RetireModel model) {
+    public Mono<ResponseModel> save(String numberaccount, RetireModel model) {
         HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         String message = Constants.Messages.INVALID_DATA;
 
-        Retire retire = new Retire(model.getNumberaccount(), model.getAmount());
-        repository.save(retire).subscribe();
+        if (findAccountByNumberAccount(numberaccount).getBody() != null) {
+            Double amountaccount = findAccountByNumberAccount(numberaccount).getBody().getAmount();
+
+            if (model.getAmount() < amountaccount && amountaccount > 0) {
+                //
+
+                Retire retire = new Retire(numberaccount, model.getAmount());
+                repository.save(retire).subscribe();
+            } else {
+                log.info("SU CUENTA NO CUENTA CON EL SALDO SUFICIENTE PARA REALIZAR LA OPERACIÓN.");
+            }
+        } else {
+            log.info("CUENTA NO ENCONTRADA." + numberaccount);
+        }
 
         return Mono.just(new ResponseModel(message, status));
     }
@@ -61,6 +75,8 @@ public class RetireService {
     }
 
     public Flux<Retire> findAccountsByDate(String date) {
-        return Flux.fromIterable(repository.findAll().toStream().filter(a -> a.getDatecreated().equals(null)).collect(Collectors.toList()));
+        return Flux.fromIterable(
+            repository.findAll().toStream().filter(a -> a.getDatecreated().equals(null)).collect(Collectors.toList())
+        );
     }
 }

@@ -21,12 +21,12 @@ public class Retire {
     private String idretire;
 
     private String numberaccount;
-    private Double amount;
+    private Integer amount;
 
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime datecreated = LocalDateTime.now(ZoneId.of("America/Lima"));
 
-    public Retire(String numberaccount, Double amount) {
+    public Retire(String numberaccount, Integer amount) {
         this.numberaccount = numberaccount;
         this.amount = amount;
     }

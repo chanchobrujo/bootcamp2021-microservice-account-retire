@@ -1,6 +1,6 @@
 package com.everisbootcamp.accountretire.Model;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +14,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class RetireModel {
 
-    @NotBlank(message = "El campo número de cuenta no debe estar vacio.")
-    private String numberaccount;
-
-    private Double amount;
+    @Min(10)
+    private Integer amount;
 }
