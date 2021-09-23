@@ -7,6 +7,7 @@ public enum Constants {
 
         public static final String CORRECT_DATA = "Datos registrados correctamente.";
         public static final String INVALID_DATA = "Datos inválidos.";
+        public static final String BALANCE = "Monto insuficiente..";
 
         public static final String MOVEMENT_DENIED = "Usted ya no puede realizar mas movimientos.";
     }
