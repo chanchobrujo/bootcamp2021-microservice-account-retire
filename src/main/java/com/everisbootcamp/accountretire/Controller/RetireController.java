@@ -29,6 +29,15 @@ public class RetireController {
         return Mono.just(ResponseEntity.ok().body(service.findAll()));
     }
 
+    @GetMapping("/{numberaccount}")
+    public Mono<ResponseEntity<Flux<Retire>>> findByNumberAccount(
+        @PathVariable("numberaccount") String numberaccount
+    ) {
+        return Mono.just(
+            ResponseEntity.ok().body(service.findByNumberAccount(numberaccount))
+        );
+    }
+
     @PostMapping("/save/{numberaccount}")
     public Mono<ResponseEntity<Map<String, Object>>> save(
         @PathVariable("numberaccount") String numberaccount,
@@ -38,11 +47,11 @@ public class RetireController {
         if (bindinResult.hasErrors()) return service.BindingResultErrors(bindinResult);
         return service
             .save(numberaccount, model)
-            .map(
-                response -> {
-                    return ResponseEntity.status(response.getStatus()).body(response.getResponse());
-                }
-            )
+            .map(response -> {
+                return ResponseEntity
+                    .status(response.getStatus())
+                    .body(response.getResponse());
+            })
             .defaultIfEmpty(ResponseEntity.internalServerError().build());
     }
 }

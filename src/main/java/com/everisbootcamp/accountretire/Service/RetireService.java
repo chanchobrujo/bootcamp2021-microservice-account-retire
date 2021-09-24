@@ -39,23 +39,40 @@ public class RetireService {
         Consumer.webclientAccount
             .post()
             .uri("/updateBalance")
-            .body(Mono.just(new updateBalanceModel(numberaccount, balance)), updateBalanceModel.class)
+            .body(
+                Mono.just(new updateBalanceModel(numberaccount, balance)),
+                updateBalanceModel.class
+            )
             .retrieve()
             .bodyToMono(Object.class)
             .subscribe();
     }
 
     private int getMonthlyMovementsQuantity(String numberaccount) {
-        return (int) repository.findAll().toStream().filter(d -> d.getNumberaccount().equals(numberaccount)).count();
+        return (int) repository
+            .findAll()
+            .toStream()
+            .filter(d -> d.getNumberaccount().equals(numberaccount))
+            .count();
     }
 
-    public Mono<ResponseEntity<Map<String, Object>>> BindingResultErrors(BindingResult bindinResult) {
+    public Mono<ResponseEntity<Map<String, Object>>> BindingResultErrors(
+        BindingResult bindinResult
+    ) {
         ResponseModel response = new ResponseModel(
-            bindinResult.getAllErrors().stream().findFirst().get().getDefaultMessage().toString(),
+            bindinResult
+                .getAllErrors()
+                .stream()
+                .findFirst()
+                .get()
+                .getDefaultMessage()
+                .toString(),
             HttpStatus.NOT_ACCEPTABLE
         );
 
-        return Mono.just(ResponseEntity.internalServerError().body(response.getResponse()));
+        return Mono.just(
+            ResponseEntity.internalServerError().body(response.getResponse())
+        );
     }
 
     public Mono<ResponseModel> save(String numberaccount, RetireModel model) {
@@ -63,12 +80,23 @@ public class RetireService {
         String message = Constants.Messages.INVALID_DATA;
 
         if (findAccountByNumberAccount(numberaccount).getBody() != null) {
-            RulesModel rules = findAccountByNumberAccount(numberaccount).getBody().getRules();
-            Double amountaccount = findAccountByNumberAccount(numberaccount).getBody().getAmount();
+            RulesModel rules = findAccountByNumberAccount(numberaccount)
+                .getBody()
+                .getRules();
+            Double amountaccount = findAccountByNumberAccount(numberaccount)
+                .getBody()
+                .getAmount();
 
             if (
-                rules.isMaximumLimitMonthlyMovements() && rules.getMaximumLimitMonthlyMovementsQuantity() <= getMonthlyMovementsQuantity(numberaccount)
-            ) return Mono.just(new ResponseModel(Constants.Messages.MOVEMENT_DENIED, HttpStatus.NOT_ACCEPTABLE));
+                rules.isMaximumLimitMonthlyMovements() &&
+                rules.getMaximumLimitMonthlyMovementsQuantity() <=
+                getMonthlyMovementsQuantity(numberaccount)
+            ) return Mono.just(
+                new ResponseModel(
+                    Constants.Messages.MOVEMENT_DENIED,
+                    HttpStatus.NOT_ACCEPTABLE
+                )
+            );
 
             if (model.getAmount() < amountaccount && amountaccount > 0) {
                 status = HttpStatus.CREATED;
@@ -96,7 +124,23 @@ public class RetireService {
         return repository.findById(id);
     }
 
+    public Flux<Retire> findByNumberAccount(String numberaccount) {
+        return Flux.fromIterable(
+            repository
+                .findAll()
+                .toStream()
+                .filter(r -> r.getNumberaccount().equals(numberaccount))
+                .collect(Collectors.toList())
+        );
+    }
+
     public Flux<Retire> findAccountsByDate(String date) {
-        return Flux.fromIterable(repository.findAll().toStream().filter(a -> a.getDatecreated().equals(null)).collect(Collectors.toList()));
+        return Flux.fromIterable(
+            repository
+                .findAll()
+                .toStream()
+                .filter(a -> a.getDatecreated().equals(null))
+                .collect(Collectors.toList())
+        );
     }
 }

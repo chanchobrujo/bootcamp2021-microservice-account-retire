@@ -5,5 +5,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class Consumer {
 
-    public static final WebClient webclientAccount = WebClient.create(Constants.Path.ACCOUNT_PATH);
+    public static final WebClient webclientAccount = WebClient.create(
+        Constants.Path.ACCOUNT_PATH
+    );
 }
