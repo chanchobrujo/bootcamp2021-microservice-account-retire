@@ -1,11 +1,11 @@
 spring:
-  application:
-    name: microservices-retire
-  profiles:
-    active: dev
-  cloud:
-    config:
-      uri: http://localhost:9510
+    application:
+        name: microservices-retire
+    profiles:
+        active: dev
+    cloud:
+        config:
+            uri: http://localhost:9510
 
 server:
-  port: 9593
+    port: 9593
